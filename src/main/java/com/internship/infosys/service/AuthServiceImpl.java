@@ -159,9 +159,9 @@ public class AuthServiceImpl implements AuthService {
         // CREATE VERIFICATION LINK
         // =================================================
 
-        String verificationLink =
-                "http://localhost:8080/api/auth/verify?token="
-                        + token;
+       String verificationLink =
+        "https://backend-ovt9.onrender.com/api/auth/verify?token="
+                + token;
 
         System.out.println(
                 "======================================"
