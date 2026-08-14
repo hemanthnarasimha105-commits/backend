@@ -41,199 +41,213 @@ public class SecurityConfig {
 
         http
 
-                // =================================================
-                // CORS
-                // =================================================
-                .cors(Customizer.withDefaults())
+            // =================================================
+            // CORS
+            // =================================================
+            .cors(Customizer.withDefaults())
+
+            // =================================================
+            // CSRF
+            // =================================================
+            .csrf(csrf -> csrf.disable())
+
+            // =================================================
+            // SESSION
+            // =================================================
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS
+                )
+            )
+
+            // =================================================
+            // AUTHORIZATION
+            // =================================================
+            .authorizeHttpRequests(auth -> auth
 
                 // =================================================
-                // CSRF
+                // CORS PREFLIGHT
                 // =================================================
-                .csrf(csrf -> csrf.disable())
-
-                // =================================================
-                // STATELESS SESSION
-                // =================================================
-                .sessionManagement(session -> session.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS))
+                .requestMatchers(
+                    HttpMethod.OPTIONS,
+                    "/**"
+                ).permitAll()
 
                 // =================================================
-                // AUTHORIZATION
+                // PUBLIC ROOT
                 // =================================================
-                .authorizeHttpRequests(auth -> auth
-
-                        // =================================================
-                        // CORS PREFLIGHT
-                        // =================================================
-                        .requestMatchers(
-                                HttpMethod.OPTIONS,
-                                "/**")
-                        .permitAll()
-
-                        // =================================================
-                        // AUTHENTICATION
-                        // =================================================
-                        .requestMatchers(
-                                "/api/auth/**")
-                        .permitAll()
-
-                        // =================================================
-                        // SWAGGER
-                        // =================================================
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**")
-                        .permitAll()
-
-                        // =================================================
-                        // AI CHAT
-                        // =================================================
-                        .requestMatchers(
-                                "/api/chat/**")
-                        .authenticated()
-
-                        // =================================================
-                        // AI ASSISTANT
-                        // =================================================
-                        .requestMatchers(
-                                "/api/ai/**")
-                        .authenticated()
-
-                        // =================================================
-                        // ASSETS
-                        // =================================================
-
-                        // GET -> ADMIN, ITSM, USER
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/assets/**")
-                        .hasAnyRole(
-                                "ADMIN",
-                                "ITSM",
-                                "USER")
-
-                        // POST -> ADMIN, ITSM
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/assets/**")
-                        .hasAnyRole(
-                                "ADMIN",
-                                "ITSM")
-
-                        // PUT -> ADMIN, ITSM
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/assets/**")
-                        .hasAnyRole(
-                                "ADMIN",
-                                "ITSM")
-
-                        // PATCH -> ADMIN, ITSM
-                        .requestMatchers(
-                                HttpMethod.PATCH,
-                                "/api/assets/**")
-                        .hasAnyRole(
-                                "ADMIN",
-                                "ITSM")
-
-                        // DELETE -> ADMIN ONLY
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/assets/**")
-                        .hasRole("ADMIN")
-
-                        // =================================================
-                        // DASHBOARD
-                        // =================================================
-                        .requestMatchers(
-                                "/api/dashboard/**")
-                        .authenticated()
-
-                        // =================================================
-                        // USERS
-                        // =================================================
-
-                        // GET -> ADMIN, ITSM, USER
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/users/**")
-                        .hasAnyRole(
-                                "ADMIN",
-                                "ITSM",
-                                "USER")
-
-                        // POST -> ADMIN ONLY
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/users/**")
-                        .hasRole("ADMIN")
-
-                        // PUT -> ADMIN ONLY
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/users/**")
-                        .hasRole("ADMIN")
-
-                        // PATCH -> ADMIN ONLY
-                        .requestMatchers(
-                                HttpMethod.PATCH,
-                                "/api/users/**")
-                        .hasRole("ADMIN")
-
-                        // DELETE -> ADMIN ONLY
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/users/**")
-                        .hasRole("ADMIN")
-
-                        // =================================================
-                        // REPORTS
-                        // =================================================
-                        .requestMatchers(
-                                "/api/reports/**")
-                        .authenticated()
-
-                        // =================================================
-                        // ALERTS
-                        // =================================================
-                        .requestMatchers(
-                                "/api/alerts/**")
-                        .authenticated()
-
-                        // =================================================
-                        // CLOUD
-                        // =================================================
-                        .requestMatchers(
-                                "/api/cloud/**")
-                        .authenticated()
-
-                        // =================================================
-                        // INCIDENTS
-                        // =================================================
-                        .requestMatchers(
-                                "/api/incidents/**")
-                        .authenticated()
-
-                        // =================================================
-                        // VULNERABILITIES
-                        // =================================================
-                        .requestMatchers(
-                                "/api/vulnerabilities/**")
-                        .authenticated()
-
-                        // =================================================
-                        // EVERYTHING ELSE
-                        // =================================================
-                        .anyRequest()
-                        .authenticated())
+                .requestMatchers(
+                    "/",
+                    "/error"
+                ).permitAll()
 
                 // =================================================
-                // JWT FILTER
+                // AUTH
                 // =================================================
-                .addFilterBefore(
-                        jwtFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                .requestMatchers(
+                    "/api/auth/**"
+                ).permitAll()
+
+                // =================================================
+                // SWAGGER
+                // =================================================
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/v3/api-docs/**"
+                ).permitAll()
+
+                // =================================================
+                // ACTUATOR HEALTH
+                // =================================================
+                .requestMatchers(
+                    "/actuator/health"
+                ).permitAll()
+
+                // =================================================
+                // AI CHAT
+                // =================================================
+                .requestMatchers(
+                    "/api/chat/**"
+                ).authenticated()
+
+                // =================================================
+                // AI
+                // =================================================
+                .requestMatchers(
+                    "/api/ai/**"
+                ).authenticated()
+
+                // =================================================
+                // ASSETS
+                // =================================================
+
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/assets/**"
+                ).hasAnyRole(
+                    "ADMIN",
+                    "ITSM",
+                    "USER"
+                )
+
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/assets/**"
+                ).hasAnyRole(
+                    "ADMIN",
+                    "ITSM"
+                )
+
+                .requestMatchers(
+                    HttpMethod.PUT,
+                    "/api/assets/**"
+                ).hasAnyRole(
+                    "ADMIN",
+                    "ITSM"
+                )
+
+                .requestMatchers(
+                    HttpMethod.PATCH,
+                    "/api/assets/**"
+                ).hasAnyRole(
+                    "ADMIN",
+                    "ITSM"
+                )
+
+                .requestMatchers(
+                    HttpMethod.DELETE,
+                    "/api/assets/**"
+                ).hasRole("ADMIN")
+
+                // =================================================
+                // DASHBOARD
+                // =================================================
+                .requestMatchers(
+                    "/api/dashboard/**"
+                ).authenticated()
+
+                // =================================================
+                // USERS
+                // =================================================
+
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/users/**"
+                ).hasAnyRole(
+                    "ADMIN",
+                    "ITSM",
+                    "USER"
+                )
+
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/users/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                    HttpMethod.PUT,
+                    "/api/users/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                    HttpMethod.PATCH,
+                    "/api/users/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                    HttpMethod.DELETE,
+                    "/api/users/**"
+                ).hasRole("ADMIN")
+
+                // =================================================
+                // REPORTS
+                // =================================================
+                .requestMatchers(
+                    "/api/reports/**"
+                ).authenticated()
+
+                // =================================================
+                // ALERTS
+                // =================================================
+                .requestMatchers(
+                    "/api/alerts/**"
+                ).authenticated()
+
+                // =================================================
+                // CLOUD
+                // =================================================
+                .requestMatchers(
+                    "/api/cloud/**"
+                ).authenticated()
+
+                // =================================================
+                // INCIDENTS
+                // =================================================
+                .requestMatchers(
+                    "/api/incidents/**"
+                ).authenticated()
+
+                // =================================================
+                // VULNERABILITIES
+                // =================================================
+                .requestMatchers(
+                    "/api/vulnerabilities/**"
+                ).authenticated()
+
+                // =================================================
+                // EVERYTHING ELSE
+                // =================================================
+                .anyRequest().authenticated()
+            )
+
+            // =================================================
+            // JWT FILTER
+            // =================================================
+            .addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
@@ -267,43 +281,55 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration config = new CorsConfiguration();
+        CorsConfiguration config =
+                new CorsConfiguration();
 
         // =================================================
-        // FRONTEND
+        // ALLOWED FRONTENDS
         // =================================================
 
         config.setAllowedOrigins(
-                List.of(
-                        "https://frontend-1xoh.onrender.com"));
+            List.of(
+                "https://frontend-1xoh.onrender.com",
+
+                // Local development
+                "http://localhost:5173",
+                "http://localhost:5174"
+            )
+        );
 
         // =================================================
-        // METHODS
+        // ALLOWED METHODS
         // =================================================
 
         config.setAllowedMethods(
-                List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "PATCH",
-                        "DELETE",
-                        "OPTIONS"));
+            List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS"
+            )
+        );
 
         // =================================================
-        // HEADERS
+        // ALLOWED HEADERS
         // =================================================
 
         config.setAllowedHeaders(
-                List.of("*"));
+            List.of("*")
+        );
 
         // =================================================
         // EXPOSED HEADERS
         // =================================================
 
         config.setExposedHeaders(
-                List.of(
-                        "Authorization"));
+            List.of(
+                "Authorization"
+            )
+        );
 
         // =================================================
         // CREDENTIALS
@@ -312,14 +338,16 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         // =================================================
-        // REGISTER CORS
+        // REGISTER
         // =================================================
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration(
-                "/**",
-                config);
+            "/**",
+            config
+        );
 
         return source;
     }
