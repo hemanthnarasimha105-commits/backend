@@ -2,7 +2,6 @@ package com.internship.infosys.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +18,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://frontend-1xoh.onrender.com")
 public class AuthController {
 
     @Autowired
@@ -33,7 +31,17 @@ public class AuthController {
     public ResponseEntity<String> register(
             @Valid @RequestBody RegisterRequest request) {
 
+        System.out.println("======================================");
+        System.out.println("REGISTER REQUEST RECEIVED");
+        System.out.println("Username: " + request.getUsername());
+        System.out.println("Email: " + request.getEmail());
+        System.out.println("======================================");
+
         String message = authService.register(request);
+
+        System.out.println("======================================");
+        System.out.println("REGISTER SUCCESS");
+        System.out.println("======================================");
 
         return ResponseEntity.ok(message);
     }
@@ -46,7 +54,8 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request) {
 
-        LoginResponse response = authService.login(request);
+        LoginResponse response =
+                authService.login(request);
 
         return ResponseEntity.ok(response);
     }
@@ -59,7 +68,16 @@ public class AuthController {
     public ResponseEntity<String> verifyEmail(
             @RequestParam("token") String token) {
 
-        String message = authService.verifyEmail(token);
+        System.out.println("======================================");
+        System.out.println("EMAIL VERIFICATION REQUEST");
+        System.out.println("======================================");
+
+        String message =
+                authService.verifyEmail(token);
+
+        System.out.println("======================================");
+        System.out.println("EMAIL VERIFICATION SUCCESS");
+        System.out.println("======================================");
 
         return ResponseEntity.ok(message);
     }
