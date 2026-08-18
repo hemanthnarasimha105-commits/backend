@@ -42,12 +42,12 @@ public class EmailServiceImpl implements EmailService {
             String username,
             String verificationLink) {
 
-        String subject = "Verify Your SentinelCore SecureOps Account";
+        String subject = "Verify Your Cloud Security Monitoring System Account";
 
         String body = """
                 Hello %s,
 
-                Welcome to SentinelCore SecureOps.
+                Welcome to Cloud Security Monitoring System.
 
                 Thank you for registering.
 
