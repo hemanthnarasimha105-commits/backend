@@ -61,7 +61,7 @@ public class EmailServiceImpl implements EmailService {
                 please ignore this email.
 
                 Regards,
-                SentinelCore SecureOps Team
+                Cloud Security Monitoring System  Team
                 """
                 .formatted(username, verificationLink);
 
