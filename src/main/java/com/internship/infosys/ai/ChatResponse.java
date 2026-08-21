@@ -1,33 +1,42 @@
 package com.internship.infosys.ai;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatResponse {
 
-    private String answer;
-    private List<String> suggestions;
+    private String message;
 
-    public ChatResponse() {
+    private String action;
+
+    private String route;
+
+    private Object data;
+
+    public static ChatResponse message(
+            String message) {
+
+        return new ChatResponse(
+                message,
+                "NONE",
+                null,
+                null
+        );
     }
 
-    public ChatResponse(String answer, List<String> suggestions) {
-        this.answer = answer;
-        this.suggestions = suggestions;
-    }
+    public static ChatResponse navigate(
+            String message,
+            String route) {
 
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public List<String> getSuggestions() {
-        return suggestions;
-    }
-
-    public void setSuggestions(List<String> suggestions) {
-        this.suggestions = suggestions;
+        return new ChatResponse(
+                message,
+                "NAVIGATE",
+                route,
+                null
+        );
     }
 }
